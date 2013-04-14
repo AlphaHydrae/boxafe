@@ -1,3 +1,12 @@
+GIT
+  remote: git@github.com:AlphaHydrae/whenever.git
+  revision: d2efde43f57bd5c33103ce4cece41fdb41b20a25
+  branch: block-config
+  specs:
+    whenever (0.8.2)
+      activesupport (>= 2.3.4)
+      chronic (>= 0.6.3)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -40,9 +49,6 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    whenever (0.8.2)
-      activesupport (>= 2.3.4)
-      chronic (>= 0.6.3)
     which_works (1.0.0)
 
 PLATFORMS
@@ -61,5 +67,5 @@ DEPENDENCIES
   rake-version
   rspec
   simplecov
-  whenever (~> 0.8.2)
+  whenever!
   which_works (~> 1.0.0)

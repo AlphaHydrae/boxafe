@@ -32,4 +32,20 @@ command :unmount do |c|
   end
 end
 
+command :start do |c|
+  c.syntax = 'boxafe start'
+  c.description = 'Configure boxafe to run on startup'
+  c.action do |args,options|
+    Boxafe::Controller.new(options).start
+  end
+end
+
+command :stop do |c|
+  c.syntax = 'boxafe stop'
+  c.description = 'Stop boxafe from running on startup'
+  c.action do |args,options|
+    Boxafe::Controller.new(options).stop
+  end
+end
+
 default_command :info

@@ -8,4 +8,4 @@ module Boxafe
 end
 
 dir = File.join File.dirname(__FILE__), 'boxafe'
-%w(box config encfs controller).each{ |lib| require File.join dir, lib }
+%w(box config encfs controller schedule).each{ |lib| require File.join dir, lib }

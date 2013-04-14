@@ -7,6 +7,14 @@ module Boxafe
       @options = options
     end
 
+    def start
+      Boxafe::Schedule.start
+    end
+
+    def stop
+      Boxafe::Schedule.stop
+    end
+
     def info
 
       config = load_config
