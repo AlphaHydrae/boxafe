@@ -7,6 +7,8 @@ gem 'paint', '~> 0.8.5'
 gem 'commander', '~> 4.1.2'
 gem 'whenever', '~> 0.8.2'
 gem 'which_works', '~> 1.0.0'
+gem 'dotenv', '~> 0.6.0'
+gem 'mutaconf', '~> 0.0.7'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

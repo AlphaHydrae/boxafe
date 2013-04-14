@@ -80,12 +80,8 @@ module Boxafe
 
     def load_config
       Config.new.tap do |config|
-        config.dsl.instance_eval read_config, config_file
+        config.configure config_file
       end
-    end
-
-    def read_config
-      File.open(config_file, 'r').read
     end
 
     def config_file

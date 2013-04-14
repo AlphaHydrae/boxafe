@@ -2,35 +2,39 @@
 module Boxafe
 
   class Config
-    attr_reader :boxes
+    KEYS = [ :encfs, :umount ]
+    attr_reader :boxes, :options
 
     def initialize
-      @options = { encfs: 'encfs', umount: 'umount' }
-      @box_options = { name: :Boxafe }
       @boxes = []
+      @options = { encfs: 'encfs', umount: 'umount', name: :Boxafe }
     end
 
-    def options
-      @options.merge @box_options
-    end
+    def box name = nil, config = nil, &block
 
-    def box name = nil, &block
-      name = (name || @name).to_s
+      if name.kind_of? Hash
+        config = name
+        name = name[:name]
+      end
+      name = (name || @options[:name]).to_s
+
       if block or !@boxes.find{ |b| b.name == name }
         @boxes.delete_if{ |b| b.name == name }
         Box.new(self, name).tap do |box|
           @boxes << box
-          box.dsl.instance_eval &block
+          box.configure config, &block
         end
       end
+
       @boxes.find{ |b| b.name == name }
     end
 
-    def dsl
-      DSL.new self, @options
+    def configure file, &block
+      @dsl ||= DSL.new(self, target: @options, keys: KEYS)
+      @dsl.configure file, &block
     end
 
-    class DSL < Box::DSL
+    class DSL < Mutaconf::DSL
 
       def initialize config, options = {}
         super options
@@ -39,6 +43,10 @@ module Boxafe
 
       def box *args, &block
         @config.box *args, &block
+      end
+
+      def env *args
+        Mutaconf.env *args
       end
     end
   end
