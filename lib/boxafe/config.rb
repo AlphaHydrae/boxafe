@@ -2,43 +2,37 @@
 module Boxafe
 
   class Config
-    KEYS = [ :encfs, :umount ]
+    OPTION_KEYS = %w(encfs umount umount_delay).collect &:to_sym
     attr_reader :boxes, :options
 
     def initialize
       @boxes = []
-      @options = { encfs: 'encfs', umount: 'umount', name: :Boxafe }
+      @options = { encfs: 'encfs', umount: 'umount', umount_delay: 0.5, name: :Boxafe }
     end
 
-    def box name = nil, config = nil, &block
+    def box options = {}, &block
+      options[:name] ||= @options[:name]
 
-      if name.kind_of? Hash
-        config = name
-        name = name[:name]
-      end
-      name = (name || @options[:name]).to_s
-
-      if block or !@boxes.find{ |b| b.name == name }
-        @boxes.delete_if{ |b| b.name == name }
-        Box.new(self, name).tap do |box|
+      if block or !@boxes.find{ |b| b.name == options[:name] }
+        @boxes.delete_if{ |b| b.name == options[:name] }
+        Box.new(self, options).tap do |box|
           @boxes << box
-          box.configure config, &block
+          box.configure options, &block
         end
       end
 
-      @boxes.find{ |b| b.name == name }
+      @boxes.find{ |b| b.name == options[:name] }
     end
 
     def configure file, &block
-      @dsl ||= DSL.new(self, target: @options, keys: KEYS)
-      @dsl.configure file, &block
+      DSL.new(self, @options).instance_eval File.read(file), file
+      self
     end
 
-    class DSL < Mutaconf::DSL
+    class DSL
 
       def initialize config, options = {}
-        super options
-        @config = config
+        @config, @options = config, options
       end
 
       def box *args, &block
@@ -47,6 +41,10 @@ module Boxafe
 
       def env *args
         Mutaconf.env *args
+      end
+
+      OPTION_KEYS.each do |name|
+        define_method(name){ |value| @options[name.to_sym] = value }
       end
     end
   end

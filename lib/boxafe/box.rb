@@ -3,10 +3,10 @@ require 'fileutils'
 module Boxafe
 
   class Box
+    OPTION_KEYS = %w(name root mount volume config keychain).collect &:to_sym
 
-    def initialize config, name = nil
-      @config, @options = config, {}
-      @options[:name] = name if name
+    def initialize config, options = {}
+      @config, @options = config, options
     end
 
     def name
@@ -18,7 +18,10 @@ module Boxafe
     end
 
     def unmount
-      system "#{options[:umount]} #{options[:mount]}"
+      opts = options
+      result = system "#{opts[:umount]} #{opts[:mount]}"
+      sleep opts[:umount_delay] if opts[:umount_delay] > 0
+      result
     end
 
     def encfs
@@ -71,9 +74,9 @@ module Boxafe
       end
     end
 
-    def configure config, &block
-      @dsl ||= Mutaconf.dsl(target: @options, keys: %w(name root mount volume config keychain).collect{ |k| k.to_sym })
-      @dsl.configure config, &block
+    def configure options = {}, &block
+      OPTION_KEYS.each{ |k| @options[k] = options[k] if options.key? k } if options.kind_of? Hash
+      DSL.new(@options).instance_eval &block if block
     end
 
     def options
@@ -83,6 +86,18 @@ module Boxafe
         opts[:config] = File.expand_path opts[:config] if opts[:config]
         opts[:volume] ||= opts[:name]
         opts[:keychain] = opts[:name] if opts[:keychain] == true
+      end
+    end
+
+    class DSL
+
+      def initialize options
+        @options = options
+      end
+
+      OPTION_KEYS.each do |name|
+        define_method(name){ |value| @options[name] = value }
+        define_method("#{name}="){ |value| @options[name] = value }
       end
     end
   end

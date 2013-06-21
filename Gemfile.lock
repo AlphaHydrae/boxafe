@@ -1,38 +1,33 @@
-GIT
-  remote: git@github.com:AlphaHydrae/whenever.git
-  revision: d2efde43f57bd5c33103ce4cece41fdb41b20a25
-  branch: block-config
-  specs:
-    whenever (0.8.2)
-      activesupport (>= 2.3.4)
-      chronic (>= 0.6.3)
-
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (3.2.13)
-      i18n (= 0.6.1)
-      multi_json (~> 1.0)
-    chronic (0.9.1)
     commander (4.1.3)
       highline (~> 1.6.11)
-    diff-lcs (1.2.3)
-    dotenv (0.6.0)
-    gem-release (0.5.3)
+    diff-lcs (1.2.4)
+    dotenv (0.8.0)
+    facets (2.9.3)
+    gem-release (0.6.0)
     gemcutter (0.7.1)
     git (1.2.5)
-    highline (1.6.16)
-    i18n (0.6.1)
+    highline (1.6.19)
     jeweler (1.8.4)
       bundler (~> 1.0)
       git (>= 1.2.5)
       rake
       rdoc
-    json (1.7.7)
-    multi_json (1.7.2)
-    mutaconf (0.0.7)
-    paint (0.8.5)
-    rake (10.0.4)
+    json (1.8.0)
+    launchdr (3)
+      facets
+      plist
+      uuid
+    macaddr (1.6.1)
+      systemu (~> 2.5.0)
+    multi_json (1.7.7)
+    mutaconf (0.2.0)
+      multi_json (~> 1.7)
+    paint (0.8.6)
+    plist (3.1.0)
+    rake (10.1.0)
     rake-version (0.3.1)
       rake (~> 10)
     rdoc (4.0.1)
@@ -49,6 +44,9 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
+    systemu (2.5.2)
+    uuid (2.3.7)
+      macaddr (~> 1.0)
     which_works (1.0.0)
 
 PLATFORMS
@@ -57,15 +55,15 @@ PLATFORMS
 DEPENDENCIES
   bundler
   commander (~> 4.1.2)
-  dotenv (~> 0.6.0)
+  dotenv (~> 0.8.0)
   gem-release
   gemcutter
   jeweler
-  mutaconf (~> 0.0.7)
+  launchdr (= 3)
+  mutaconf (~> 0.2.0)
   paint (~> 0.8.5)
   rake
   rake-version
   rspec
   simplecov
-  whenever!
   which_works (~> 1.0.0)

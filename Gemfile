@@ -6,10 +6,11 @@ source "http://rubygems.org"
 gem 'paint', '~> 0.8.5'
 gem 'commander', '~> 4.1.2'
 gem 'which_works', '~> 1.0.0'
-gem 'dotenv', '~> 0.6.0'
-gem 'mutaconf', '~> 0.0.7'
+gem 'dotenv', '~> 0.8.0'
+gem 'mutaconf', '~> 0.2.0'
+gem 'launchdr', '3'
 #gem 'whenever', '~> 0.8.2'
-gem 'whenever', :git => 'git@github.com:AlphaHydrae/whenever.git', :branch => 'block-config'
+#gem 'whenever', :git => 'git@github.com:AlphaHydrae/whenever.git', :branch => 'block-config'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

@@ -3,28 +3,25 @@ module Boxafe
 
   class Controller
 
-    def initialize options
-      @options = options
+    def start options = {}
+      # TODO: allow to mount only specific boxes
+      Boxafe::Scheduler.platform_scheduler(options).start
     end
 
-    def start
-      Boxafe::Schedule.start
+    def stop options = {}
+      Boxafe::Scheduler.platform_scheduler(options).stop
     end
 
-    def stop
-      Boxafe::Schedule.stop
-    end
+    def info options = {}
 
-    def info
-
-      config = load_config
+      config = load_config options
 
       puts
       puts Paint["# Boxafe v#{VERSION}", :bold]
 
       config.boxes.each do |box|
         puts
-        puts box.description(@options.verbose)
+        puts box.description(options[:verbose])
       end
 
       puts
@@ -32,7 +29,9 @@ module Boxafe
 
     def mount *args
 
-      config = load_config
+      options = args.last.kind_of?(Hash) ? args.pop : {}
+
+      config = load_config options
       boxes = args.empty? ? config.boxes : args.collect{ |arg| config.boxes.find{ |box| box.name == arg } }
 
       puts
@@ -63,8 +62,10 @@ module Boxafe
     end
 
     def unmount *args
+
+      options = args.last.kind_of?(Hash) ? args.pop : {}
       
-      config = load_config
+      config = load_config options
       boxes = args.empty? ? config.boxes : args.collect{ |arg| config.boxes.find{ |box| box.name == arg } }
 
       puts
@@ -86,14 +87,14 @@ module Boxafe
 
     private
 
-    def load_config
+    def load_config options = {}
       Config.new.tap do |config|
-        config.configure config_file
+        config.configure config_file(options)
       end
     end
 
-    def config_file
-      @config_file ||= File.expand_path([ @options.config, ENV['BOXAFE_CONFIG'], "~/.boxafe.rb" ].compact.first)
+    def config_file options = {}
+      @config_file ||= File.expand_path([ options[:config], ENV['BOXAFE_CONFIG'], "~/.boxafe.rb" ].compact.first)
     end
   end
 end
