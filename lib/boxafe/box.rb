@@ -2,13 +2,13 @@ require 'fileutils'
 
 class Boxafe::Box
 
-  OPTION_KEYS = %w(name root mount volume config keychain).collect &:to_sym
+  OPTION_KEYS = [ :name, :root, :mount, :volume, :config, :keychain ]
 
-  def initialize config, options = {}
+  def initialize options = {}
 
     raise Boxafe::Error, "The :name option is required" unless options[:name]
 
-    @config, @options = config, options
+    @options = options
   end
 
   def name
@@ -77,12 +77,13 @@ class Boxafe::Box
   end
 
   def configure options = {}, &block
-    OPTION_KEYS.each{ |k| @options[k] = options[k] if options.key? k }
+    @options.merge! options
     DSL.new(@options).instance_eval &block if block
+    self
   end
 
   def options
-    @config.options.merge(@options).tap do |opts|
+    @options.tap do |opts|
       opts[:root] = File.expand_path opts[:root] || "~/Dropbox/#{opts[:name]}"
       opts[:mount] = File.expand_path opts[:mount] || "/Volumes/#{opts[:name]}"
       opts[:config] = File.expand_path opts[:config] if opts[:config]
@@ -97,9 +98,6 @@ class Boxafe::Box
       @options = options
     end
 
-    OPTION_KEYS.each do |name|
-      define_method(name){ |value| @options[name] = value }
-      define_method("#{name}="){ |value| @options[name] = value }
-    end
+    OPTION_KEYS.each{ |name| define_method(name){ |value| @options[name] = value } }
   end
 end
