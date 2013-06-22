@@ -28,8 +28,8 @@ class Boxafe::CLI
   def mount *args
 
     options = args.last.kind_of?(Hash) ? args.pop : {}
-
     config = load_config options
+
     boxes = args.empty? ? config.boxes : args.collect{ |arg| config.boxes.find{ |box| box.name == arg } }
 
     puts
@@ -62,8 +62,8 @@ class Boxafe::CLI
   def unmount *args
 
     options = args.last.kind_of?(Hash) ? args.pop : {}
-    
     config = load_config options
+
     boxes = args.empty? ? config.boxes : args.collect{ |arg| config.boxes.find{ |box| box.name == arg } }
 
     puts
@@ -86,12 +86,6 @@ class Boxafe::CLI
   private
 
   def load_config options = {}
-    Boxafe::Config.new.tap do |config|
-      config.configure config_file(options)
-    end
-  end
-
-  def config_file options = {}
-    @config_file ||= File.expand_path([ options[:config], ENV['BOXAFE_CONFIG'], "~/.boxafe.rb" ].compact.first)
+    Boxafe::Config.new(options).load
   end
 end
