@@ -27,7 +27,7 @@ class Boxafe::Box
   end
 
   def encfs
-    Encfs.new options
+    Boxafe::Encfs.new options
   end
 
   def ensure_mount_point
@@ -62,7 +62,7 @@ class Boxafe::Box
       s << "\nKeychain Password: #{opts[:keychain]}" if opts[:keychain]
       s << "\nEncFS Config: #{opts[:config]}" if opts[:config]
 
-      s << "\nCommand: #{Paint[Encfs.new(opts).command, :yellow]}" if verbose
+      s << "\nCommand: #{Paint[encfs.command, :yellow]}" if verbose
     end
   end
 

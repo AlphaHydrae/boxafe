@@ -25,6 +25,6 @@ class Boxafe::Encfs
   end
 
   def encfs_config
-    @options[:config] ? "ENCFS6_CONFIG=#{@options[:config]}" : nil
+    @options[:encfs_config] ? "ENCFS6_CONFIG=#{@options[:encfs_config]}" : nil
   end
 end
