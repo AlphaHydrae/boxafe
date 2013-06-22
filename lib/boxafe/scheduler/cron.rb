@@ -1,4 +1,4 @@
-require 'whenever'
+#require 'whenever'
 
 class Boxafe::Scheduler::Cron < Boxafe::Scheduler
 

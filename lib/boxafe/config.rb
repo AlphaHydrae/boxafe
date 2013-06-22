@@ -7,25 +7,11 @@ class Boxafe::Config
 
   def initialize options = {}
     @boxes = []
-    @options = { encfs: 'encfs', umount: 'umount', umount_delay: 0.5, name: :Boxafe }.merge options
-  end
-
-  def box options = {}, &block
-    options[:name] ||= @options[:name]
-
-    if block or !@boxes.find{ |b| b.name == options[:name] }
-      @boxes.delete_if{ |b| b.name == options[:name] }
-      Boxafe::Box.new(self, options).tap do |box|
-        @boxes << box
-        box.configure options, &block
-      end
-    end
-
-    @boxes.find{ |b| b.name == options[:name] }
+    @options = { encfs: 'encfs', umount: 'umount', umount_delay: 0.5 }.merge options
   end
 
   def configure file = nil, &block
-    DSL.new(self, @options).tap do |dsl|
+    DSL.new(self).tap do |dsl|
       dsl.instance_eval File.read(file), file if file
       dsl.instance_eval &block if block
     end
@@ -42,12 +28,15 @@ class Boxafe::Config
 
   class DSL
 
-    def initialize config, options = {}
-      @config, @options = config, options
+    def initialize config
+      @config = config
     end
 
-    def box *args, &block
-      @config.box *args, &block
+    def box options = {}, &block
+      Boxafe::Box.new(@config, options).tap do |box|
+        box.configure options, &block
+        @config.boxes << box
+      end
     end
 
     def env *args
@@ -55,7 +44,7 @@ class Boxafe::Config
     end
 
     OPTION_KEYS.each do |name|
-      define_method(name){ |value| @options[name.to_sym] = value }
+      define_method(name){ |value| @config.options[name.to_sym] = value }
     end
   end
 end

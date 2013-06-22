@@ -5,6 +5,9 @@ class Boxafe::Box
   OPTION_KEYS = %w(name root mount volume config keychain).collect &:to_sym
 
   def initialize config, options = {}
+
+    raise Boxafe::Error, "The :name option is required" unless options[:name]
+
     @config, @options = config, options
   end
 
@@ -74,7 +77,7 @@ class Boxafe::Box
   end
 
   def configure options = {}, &block
-    OPTION_KEYS.each{ |k| @options[k] = options[k] if options.key? k } if options.kind_of? Hash
+    OPTION_KEYS.each{ |k| @options[k] = options[k] if options.key? k }
     DSL.new(@options).instance_eval &block if block
   end
 
