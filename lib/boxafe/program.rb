@@ -2,8 +2,8 @@ require 'commander'
 
 class Boxafe::Program < Commander::Runner
 
-  BACKTRACE_NOTICE = ' (use --trace to view backtrace)'
   GLOBAL_OPTIONS = [ :config, :verbose ]
+  BACKTRACE_NOTICE = ' (use --trace to view backtrace)'
 
   include Commander::UI
   include Commander::UI::AskForClass
@@ -22,7 +22,9 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe info'
       c.description = 'Display the current configuration (default action)'
       c.action do |args,options|
-        controller.info extract(options)
+        to_trace_or_not_to_trace do
+          cli.info extract(options)
+        end
       end
     end
 
@@ -30,7 +32,9 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe mount'
       c.description = 'Mount configured boxes with EncFS'
       c.action do |args,options|
-        controller.mount *args
+        to_trace_or_not_to_trace do
+          cli.mount *args
+        end
       end
     end
 
@@ -38,7 +42,9 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe unmount'
       c.description = 'Unmount configured boxes'
       c.action do |args,options|
-        controller.unmount *args
+        to_trace_or_not_to_trace do
+          cli.unmount *args
+        end
       end
     end
 
@@ -46,7 +52,9 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe start'
       c.description = 'Configure boxafe to run on startup'
       c.action do |args,options|
-        controller.start *(args.push extract(options))
+        to_trace_or_not_to_trace do
+          cli.start *(args.push extract(options))
+        end
       end
     end
 
@@ -54,17 +62,17 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe stop'
       c.description = 'Stop boxafe from running on startup'
       c.action do |args,options|
-        controller.stop *(args.push extract(options))
+        to_trace_or_not_to_trace do
+          cli.stop *(args.push extract(options))
+        end
       end
     end
-
-    default_command :info
   end
 
   private
 
-  def controller
-    Boxafe::Controller.new
+  def cli
+    Boxafe::CLI.new
   end
 
   def to_trace_or_not_to_trace trace = false

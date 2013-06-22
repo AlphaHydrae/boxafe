@@ -1,51 +1,48 @@
 
-module Boxafe
+class Boxafe::Config
+  OPTION_KEYS = %w(encfs umount umount_delay).collect &:to_sym
+  attr_reader :boxes, :options
 
-  class Config
-    OPTION_KEYS = %w(encfs umount umount_delay).collect &:to_sym
-    attr_reader :boxes, :options
+  def initialize
+    @boxes = []
+    @options = { encfs: 'encfs', umount: 'umount', umount_delay: 0.5, name: :Boxafe }
+  end
 
-    def initialize
-      @boxes = []
-      @options = { encfs: 'encfs', umount: 'umount', umount_delay: 0.5, name: :Boxafe }
+  def box options = {}, &block
+    options[:name] ||= @options[:name]
+
+    if block or !@boxes.find{ |b| b.name == options[:name] }
+      @boxes.delete_if{ |b| b.name == options[:name] }
+      Boxafe::Box.new(self, options).tap do |box|
+        @boxes << box
+        box.configure options, &block
+      end
     end
 
-    def box options = {}, &block
-      options[:name] ||= @options[:name]
+    @boxes.find{ |b| b.name == options[:name] }
+  end
 
-      if block or !@boxes.find{ |b| b.name == options[:name] }
-        @boxes.delete_if{ |b| b.name == options[:name] }
-        Box.new(self, options).tap do |box|
-          @boxes << box
-          box.configure options, &block
-        end
-      end
+  def configure file, &block
+    DSL.new(self, @options).instance_eval File.read(file), file
+    self
+  end
 
-      @boxes.find{ |b| b.name == options[:name] }
+  class DSL
+
+    def initialize config, options = {}
+      @config, @options = config, options
     end
 
-    def configure file, &block
-      DSL.new(self, @options).instance_eval File.read(file), file
-      self
+    def box *args, &block
+      @config.box *args, &block
     end
 
-    class DSL
+    def env *args
+      Mutaconf.env *args
+    end
 
-      def initialize config, options = {}
-        @config, @options = config, options
-      end
-
-      def box *args, &block
-        @config.box *args, &block
-      end
-
-      def env *args
-        Mutaconf.env *args
-      end
-
-      OPTION_KEYS.each do |name|
-        define_method(name){ |value| @options[name.to_sym] = value }
-      end
+    OPTION_KEYS.each do |name|
+      define_method(name){ |value| @options[name.to_sym] = value }
     end
   end
 end

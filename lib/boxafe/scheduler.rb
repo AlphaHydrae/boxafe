@@ -1,20 +1,17 @@
 
-module Boxafe
+class Boxafe::Scheduler
 
-  class Scheduler
-
-    def self.platform_scheduler options = {}
-      case RbConfig::CONFIG['host_os']
-      when /darwin/i
-        Scheduler::Launchd.new options
-      else
-        Scheduler::Cron.new options
-      end
+  def self.platform_scheduler options = {}
+    case RbConfig::CONFIG['host_os']
+    when /darwin/i
+      Scheduler::Launchd.new options
+    else
+      Scheduler::Cron.new options
     end
+  end
 
-    def initialize options = {}
-      @options = options
-    end
+  def initialize options = {}
+    @options = options
   end
 end
 

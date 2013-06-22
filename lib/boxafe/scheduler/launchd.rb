@@ -1,43 +1,38 @@
 require 'launchdr'
 require 'fileutils'
 
-module Boxafe
+class Boxafe::Scheduler::Launchd < Boxafe::Scheduler
 
-  class Scheduler
+  def start
+    stop
+    plist.dump USER_AGENT
+    plist.load!
+  end
 
-    class Launchd < Scheduler
+  def stop
+    return false unless plist_exists?
+    plist.unload!
+    FileUtils.rm_f plist.file
+  end
 
-      def start
-        stop
-        plist.dump USER_AGENT
-        plist.load!
-      end
+  private
 
-      def stop
-        return false unless plist_exists?
-        plist.unload!
-        FileUtils.rm_f plist.file
-      end
+  LABEL = 'com.alphahydrae.boxafe'
+  USER_AGENT = LaunchDr::Launchd::Paths[:user_agent]
 
-      private
+  def plist_exists?
+    begin
+      File.exists? plist.file
+    rescue
+      false
+    end
+  end
 
-      USER_AGENT = LaunchDr::Launchd::Paths[:user_agent]
-
-      def plist_exists?
-        begin
-          File.exists? plist.file
-        rescue
-          false
-        end
-      end
-
-      def plist
-        @plist ||= LaunchDr::Launchd.new("com.alphahydrae.boxafe").tap do |plist|
-          plist[:ProgramArguments] = [ 'boxafe', 'mount' ]
-          plist[:RunAtLoad] = true
-          plist[:EnvironmentVariables] = { 'PATH' => ENV['PATH'] } # TODO: add path option
-        end
-      end
+  def plist
+    @plist ||= LaunchDr::Launchd.new(LABEL).tap do |plist|
+      plist[:ProgramArguments] = [ 'boxafe', 'mount' ]
+      plist[:RunAtLoad] = true
+      plist[:EnvironmentVariables] = { 'PATH' => ENV['PATH'] } # TODO: add path option
     end
   end
 end
