@@ -21,6 +21,7 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Boxafe encrypts and auto-mounts a folder with encfs and whenever.}
   gem.email = "hydrae.alpha@gmail.com"
   gem.authors = ["AlphaHydrae"]
+  gem.files = %x[git ls-files -- bin lib].split("\n") + %w(Gemfile LICENSE.txt README.md VERSION)
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
