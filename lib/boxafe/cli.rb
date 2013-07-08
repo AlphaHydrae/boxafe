@@ -10,7 +10,7 @@ class Boxafe::CLI
     Boxafe::Scheduler.platform_scheduler(options).stop
   end
 
-  def info options = {}
+  def status options = {}
 
     config = load_config options
 

@@ -18,12 +18,12 @@ class Boxafe::Program < Commander::Runner
     global_option '-c', '--config PATH', 'Use a custom configuration file (defaults to ~/.boxafe.rb)'
     global_option '--verbose', 'Increase verbosity'
 
-    command :info do |c|
-      c.syntax = 'boxafe info'
-      c.description = 'Display the current configuration (default action)'
+    command :status do |c|
+      c.syntax = 'boxafe status'
+      c.description = 'Display the current status and configuration'
       c.action do |args,options|
         to_trace_or_not_to_trace do
-          cli.info extract(options)
+          cli.status extract(options)
         end
       end
     end
