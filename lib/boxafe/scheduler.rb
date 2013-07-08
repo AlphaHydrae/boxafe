@@ -4,9 +4,9 @@ class Boxafe::Scheduler
   def self.platform_scheduler options = {}
     case RbConfig::CONFIG['host_os']
     when /darwin/i
-      Scheduler::Launchd.new options
+      Boxafe::Scheduler::Launchd.new options
     else
-      Scheduler::Cron.new options
+      Boxafe::Scheduler::Cron.new options
     end
   end
 
