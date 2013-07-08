@@ -33,7 +33,7 @@ class Boxafe::Config
     end
 
     def box options = {}, &block
-      Boxafe::Box.new(options).tap do |box|
+      Boxafe::Box.new(@config.options.merge(options)).tap do |box|
         @config.boxes << box.configure(&block)
       end
     end
