@@ -22,7 +22,7 @@ class Boxafe::Box
   def unmount
     opts = options
     result = system "#{opts[:umount]} #{opts[:mount]}"
-    sleep opts[:umount_delay] if opts[:umount_delay] > 0
+    sleep opts[:umount_delay] if opts[:umount_delay] and opts[:umount_delay] > 0
     result
   end
 
