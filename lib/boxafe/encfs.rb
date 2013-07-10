@@ -8,13 +8,14 @@ class Boxafe::Encfs
   end
 
   def command
-    [ encfs_config, @options[:encfs], %/"#{@options[:root]}"/, %/"#{@options[:mount]}"/, extpass, '--', volname ].compact.join ' '
+    # TODO: use shellwords for binary, test escaping
+    [ encfs_config, @options[:encfs], Shellwords.escape(@options[:root]), Shellwords.escape(@options[:mount]), extpass, '--', volname ].compact.join ' '
   end
 
   private
 
   def volname
-    %/-ovolname="#{@options[:volume]}"/
+    %/-ovolname=#{Shellwords.escape @options[:volume]}/
   end
 
   def extpass
@@ -26,6 +27,6 @@ class Boxafe::Encfs
   end
 
   def encfs_config
-    @options[:encfs_config] ? %/ENCFS6_CONFIG="#{File.expand_path @options[:encfs_config]}"/ : nil
+    @options[:encfs_config] ? %/ENCFS6_CONFIG=#{Shellwords.escape File.expand_path(@options[:encfs_config])}/ : nil
   end
 end
