@@ -1,6 +1,7 @@
-
+# encoding: UTF-8
 class Boxafe::Config
 
+  # TODO: document unmount_delay
   OPTION_KEYS = [ :encfs, :umount, :umount_delay ]
 
   attr_reader :boxes, :options

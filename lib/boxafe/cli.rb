@@ -1,8 +1,9 @@
-
+# encoding: UTF-8
 class Boxafe::CLI
 
   def start options = {}
     # TODO: allow to mount only specific boxes
+    # TODO: only allow boxes with an extpass
     Boxafe::Scheduler.platform_scheduler(options).start
   end
 
@@ -30,6 +31,7 @@ class Boxafe::CLI
     options = args.last.kind_of?(Hash) ? args.pop : {}
     config = load_config options
 
+    # FIXME: crashes with unknown box names
     boxes = args.empty? ? config.boxes : args.collect{ |arg| config.boxes.find{ |box| box.name == arg } }
 
     puts

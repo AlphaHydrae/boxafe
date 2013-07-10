@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'fileutils'
 
 class Boxafe::Encfs
@@ -7,13 +8,13 @@ class Boxafe::Encfs
   end
 
   def command
-    [ encfs_config, @options[:encfs], @options[:root], @options[:mount], extpass, '--', volname ].compact.join ' '
+    [ encfs_config, @options[:encfs], %/"#{@options[:root]}"/, %/"#{@options[:mount]}"/, extpass, '--', volname ].compact.join ' '
   end
 
   private
 
   def volname
-    "-ovolname=#{@options[:volume]}"
+    %/-ovolname="#{@options[:volume]}"/
   end
 
   def extpass
@@ -25,6 +26,6 @@ class Boxafe::Encfs
   end
 
   def encfs_config
-    @options[:encfs_config] ? "ENCFS6_CONFIG=#{@options[:encfs_config]}" : nil
+    @options[:encfs_config] ? %/ENCFS6_CONFIG="#{File.expand_path @options[:encfs_config]}"/ : nil
   end
 end

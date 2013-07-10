@@ -1,4 +1,4 @@
-
+# encoding: UTF-8
 class Boxafe::Scheduler
 
   def self.platform_scheduler options = {}

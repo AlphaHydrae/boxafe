@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #require 'whenever'
 
 class Boxafe::Scheduler::Cron < Boxafe::Scheduler
