@@ -2,7 +2,7 @@
 class Boxafe::Config
 
   # TODO: document unmount_delay
-  OPTION_KEYS = [ :encfs, :umount, :umount_delay ]
+  OPTION_KEYS = [ :encfs, :umount, :umount_delay, :notify ]
 
   attr_reader :boxes, :options
 

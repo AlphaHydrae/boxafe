@@ -20,6 +20,7 @@ GEM
       multi_json (~> 1.4)
       nokogiri (~> 1.5.2)
       oauth2
+    growl (1.0.3)
     hashie (2.0.5)
     highline (1.6.19)
     httpauth (0.2.0)
@@ -75,6 +76,7 @@ GEM
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
     systemu (2.5.2)
+    terminal-notifier-guard (1.5.3)
     uuid (2.3.7)
       macaddr (~> 1.0)
     which_works (1.0.0)
@@ -88,6 +90,7 @@ DEPENDENCIES
   dotenv (~> 0.8.0)
   gem-release
   gemcutter
+  growl (~> 1.0.3)
   jeweler
   launchdr (= 3)
   mutaconf (~> 0.2.0)
@@ -96,4 +99,5 @@ DEPENDENCIES
   rake-version
   rspec
   simplecov
+  terminal-notifier-guard (~> 1.5.3)
   which_works (~> 1.0.0)

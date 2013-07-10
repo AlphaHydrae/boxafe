@@ -34,16 +34,20 @@ class Boxafe::CLI
     # FIXME: crashes with unknown box names
     boxes = args.empty? ? config.boxes : args.collect{ |arg| config.boxes.find{ |box| box.name == arg } }
 
+    notifier = Boxafe::Notifier.notifier config.options
+
     puts
     boxes.each do |box|
 
       print "Mounting #{box.name}... "
       case box.mount_status
       when :mounted
+        notifier.notify "#{box.name} is already mounted" if notifier
         puts Paint['already mounted', :green]
         next
       when :invalid
-        puts Paint['invalid mount point', :red]
+        notifier.notify "#{box.name} has an invalid mount point (not a directory)", type: :failure if notifier
+        puts Paint['invalid mount point (not a directory)', :red]
         next
       end
 
@@ -52,8 +56,10 @@ class Boxafe::CLI
 
       puts case box.mount_status
       when :mounted
+        notifier.notify "#{box.name} is mounted", type: :success if notifier
         Paint['mounted', :green]
       else
+        notifier.notify "#{box.name} could not be mounted", type: :failure if notifier
         Paint['could not be mounted', :red]
       end
     end
