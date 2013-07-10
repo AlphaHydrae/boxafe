@@ -4,8 +4,6 @@
 [![Dependency Status](https://gemnasium.com/AlphaHydrae/boxafe.png)](https://gemnasium.com/AlphaHydrae/boxafe)
 [![Build Status](https://secure.travis-ci.org/AlphaHydrae/boxafe.png)](http://travis-ci.org/AlphaHydrae/boxafe)
 
-**Secure your Dropbox with EncFS.**
-
 Boxafe mounts EncFS filesystems or "boxes" that you define in a configuration file with a friendly DSL.
 It can also mount them on startup.
 
@@ -118,6 +116,7 @@ Writing specs will get your code pulled faster.
 This is the list of planned features/changes:
 
 * Complete test suite.
+* Growl/OS X notifications.
 * Get password from a file.
 * Cron scheduling with [whenever](https://github.com/javan/whenever).
 
