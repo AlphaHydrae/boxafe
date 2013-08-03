@@ -5,7 +5,7 @@
 [![Build Status](https://secure.travis-ci.org/AlphaHydrae/boxafe.png)](http://travis-ci.org/AlphaHydrae/boxafe)
 
 Boxafe mounts EncFS filesystems or "boxes" that you define in a configuration file with a friendly DSL.
-It can also mount them on startup.
+It can also mount them on startup. [EncFS](http://www.arg0.net/encfs) must be installed separately.
 
 **Note: Currently supports OS X. Partial Linux support.**
 
