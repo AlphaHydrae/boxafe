@@ -125,7 +125,7 @@ This is the list of planned features/changes:
 
 * Complete test suite.
 * Growl/OS X notifications.
-* Get password from a file.
+* "Repair" feature to un-quarantine files on OS X.
 * Cron scheduling with [whenever](https://github.com/javan/whenever).
 
 ## Meta

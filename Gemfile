@@ -25,4 +25,5 @@ group :development do
   gem 'gem-release'
   gem 'rake-version'
   gem 'simplecov'
+  gem 'fakefs', require: 'fakefs/safe'
 end

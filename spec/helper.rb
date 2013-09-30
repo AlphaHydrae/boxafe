@@ -13,4 +13,5 @@ require 'simplecov'
 SimpleCov.start
 
 require 'rspec'
+require 'fakefs/spec_helpers'
 require 'boxafe'

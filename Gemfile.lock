@@ -8,6 +8,7 @@ GEM
     diff-lcs (1.2.4)
     dotenv (0.8.0)
     facets (2.9.3)
+    fakefs (0.4.3)
     faraday (0.8.7)
       multipart-post (~> 1.1)
     gem-release (0.6.0)
@@ -88,6 +89,7 @@ DEPENDENCIES
   bundler
   commander (~> 4.1.2)
   dotenv (~> 0.8.0)
+  fakefs
   gem-release
   gemcutter
   growl (~> 1.0.3)

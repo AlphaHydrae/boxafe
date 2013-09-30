@@ -11,8 +11,8 @@ class Boxafe::Encfs
     [
       encfs_config,
       Shellwords.escape(@options[:encfs]),
-      Shellwords.escape(@options[:root]),
-      Shellwords.escape(@options[:mount]),
+      Shellwords.escape(absolute_root_dir),
+      Shellwords.escape(absolute_mount_dir),
       extpass,
       '--',
       volname
@@ -20,6 +20,15 @@ class Boxafe::Encfs
   end
 
   private
+
+  def absolute_root_dir
+    # TODO: remove Dir.pwd once fakefs is fixed (multiple occurrences in this file)
+    File.expand_path @options[:root], Dir.pwd
+  end
+
+  def absolute_mount_dir
+    File.expand_path @options[:mount], Dir.pwd
+  end
 
   def volname
     %/-ovolname=#{Shellwords.escape @options[:volume]}/
@@ -36,6 +45,6 @@ class Boxafe::Encfs
   end
 
   def encfs_config
-    @options[:encfs_config] ? %/ENCFS6_CONFIG=#{Shellwords.escape File.expand_path(@options[:encfs_config])}/ : nil
+    @options[:encfs_config] ? %/ENCFS6_CONFIG=#{Shellwords.escape File.expand_path(@options[:encfs_config], Dir.pwd)}/ : nil
   end
 end
