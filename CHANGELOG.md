@@ -1,5 +1,5 @@
 
-## 0.2.0 (alpha)
+## 0.1.5 (alpha)
 
 * Option to read password from a file
 
