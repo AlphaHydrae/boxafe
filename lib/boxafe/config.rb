@@ -2,6 +2,7 @@
 class Boxafe::Config
 
   # TODO: document unmount_delay
+  # TODO: add option to chdir, boxes relative to home dir by default
   OPTION_KEYS = [ :encfs, :umount, :umount_delay, :notify ]
 
   attr_reader :boxes, :options

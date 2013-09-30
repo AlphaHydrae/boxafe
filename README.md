@@ -27,6 +27,14 @@ end
 # this command is run:
 # encfs "/secure/abox" "/Volumes/abox" -- -ovolname="A box"
 
+# get the password from a file
+box do
+  name 'Password file box'
+  root '/secure/password-file-box'
+  mount '/Volumes/password-file-box'
+  password_file '/secret/password'
+end
+
 # get the password from the OS X keychain
 box do
   name 'Keychain box'

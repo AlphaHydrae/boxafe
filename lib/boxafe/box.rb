@@ -3,7 +3,7 @@ require 'fileutils'
 
 class Boxafe::Box
 
-  OPTION_KEYS = [ :name, :root, :mount, :volume, :encfs_config, :keychain ]
+  OPTION_KEYS = [ :name, :root, :mount, :volume, :encfs_config, :keychain, :password_file ]
 
   def initialize options = {}
 
@@ -60,7 +60,11 @@ class Boxafe::Box
       end
 
       s << "\nVolume Name: #{opts[:volume]}"
-      s << "\nKeychain Password: #{opts[:keychain]}" if opts[:keychain]
+      if opts[:password_file]
+        s << "\nPassword File: #{opts[:password_file]}"
+      elsif opts[:keychain]
+        s << "\nKeychain Password: #{opts[:keychain]}"
+      end
       s << "\nEncFS Config: #{opts[:encfs_config]}" if opts[:encfs_config]
 
       s << "\nCommand: #{Paint[encfs.command, :yellow]}" if verbose
@@ -85,11 +89,18 @@ class Boxafe::Box
 
   def options
     @options.tap do |opts|
+
       opts[:root] = File.expand_path opts[:root] || "~/Dropbox/#{opts[:name]}"
       opts[:mount] = File.expand_path opts[:mount] || "/Volumes/#{opts[:name]}"
       opts[:encfs_config] = File.expand_path opts[:encfs_config] if opts[:encfs_config]
       opts[:volume] ||= opts[:name]
-      opts[:keychain] = opts[:name] if opts[:keychain] == true
+
+      if opts[:password_file]
+        opts[:password_file] = File.expand_path opts[:password_file]
+        opts.delete :keychain
+      elsif opts[:keychain] == true
+        opts[:keychain] = opts[:name]
+      end
     end
   end
 
