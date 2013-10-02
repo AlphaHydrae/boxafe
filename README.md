@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/boxafe.png)](http://badge.fury.io/rb/boxafe)
 [![Dependency Status](https://gemnasium.com/AlphaHydrae/boxafe.png)](https://gemnasium.com/AlphaHydrae/boxafe)
 [![Build Status](https://secure.travis-ci.org/AlphaHydrae/boxafe.png)](http://travis-ci.org/AlphaHydrae/boxafe)
+[![Coverage Status](https://coveralls.io/repos/AlphaHydrae/boxafe/badge.png?branch=master)](https://coveralls.io/r/AlphaHydrae/boxafe?branch=master)
 
 Boxafe mounts EncFS filesystems or "boxes" that you define in a configuration file with a friendly DSL.
 It can also mount them on startup. [EncFS](http://www.arg0.net/encfs) must be installed separately.
