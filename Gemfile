@@ -26,5 +26,5 @@ group :development do
   gem 'rake-version'
   gem 'simplecov'
   gem 'fakefs', require: 'fakefs/safe'
-  # TODO: use coveralls
+  gem 'coveralls', require: false
 end

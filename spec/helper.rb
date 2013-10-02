@@ -12,6 +12,9 @@ end
 require 'simplecov'
 SimpleCov.start
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'rspec'
 require 'fakefs/spec_helpers'
 require 'boxafe'
