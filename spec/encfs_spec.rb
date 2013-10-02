@@ -53,6 +53,11 @@ describe Boxafe::Encfs do
     expect_command(password_file: '/tmp/password').to eq('encfs /encrypted /clear --extpass="head -n 1 /tmp/password" -- -ovolname=Boxafe')
   end
 
+  it "should expand the password file path from the working directory" do
+    go_to_cwd
+    expect_command(password_file: 'relative/password').to eq('encfs /encrypted /clear --extpass="head -n 1 /cwd/relative/password" -- -ovolname=Boxafe')
+  end
+
   it "should escape options containing spaces" do
     expect_command(encfs: '/bin/enc fs', root: '/en crypted', mount: '/cl ear', encfs_config: '/.en cfs.xml').to eq('ENCFS6_CONFIG=/.en\ cfs.xml /bin/enc\ fs /en\ crypted /cl\ ear -- -ovolname=Boxafe')
   end

@@ -36,7 +36,7 @@ class Boxafe::Encfs
 
   def extpass
     if @options[:password_file]
-      %|--extpass="head -n 1 #{Shellwords.escape @options[:password_file]}"|
+      %|--extpass="head -n 1 #{Shellwords.escape File.expand_path(@options[:password_file], Dir.pwd)}"|
     elsif @options[:keychain]
       %*--extpass="security 2>&1 >/dev/null find-generic-password -gl '#{@options[:keychain]}' |grep password|cut -d \\\\\\" -f 2"*
     else

@@ -15,6 +15,15 @@ module Boxafe
       @code = code
     end
   end
+
+  class OptionError < Error
+    attr_reader :option
+
+    def initialize msg, option = nil
+      super msg
+      @option = option
+    end
+  end
 end
 
 Dir[File.join File.dirname(__FILE__), File.basename(__FILE__, '.*'), '*.rb'].each{ |lib| require lib }

@@ -1,115 +1,81 @@
 # encoding: UTF-8
 require 'fileutils'
 
-class Boxafe::Box
+module Boxafe
 
-  OPTION_KEYS = [ :name, :root, :mount, :volume, :encfs_config, :keychain, :password_file ]
+  class Box
+    OPTION_KEYS = [ :name, :root, :mount, :volume, :encfs_config, :keychain, :password_file ]
 
-  def initialize options = {}
-
-    raise Boxafe::Error, "The :name option is required" unless options[:name]
-
-    @options = options
-  end
-
-  def name
-    @options[:name]
-  end
-
-  def mount
-    system encfs.command
-  end
-
-  def unmount
-    opts = options
-    result = system "#{opts[:umount]} #{opts[:mount]}"
-    sleep opts[:umount_delay] if opts[:umount_delay] and opts[:umount_delay] > 0
-    result
-  end
-
-  def encfs
-    Boxafe::Encfs.new options
-  end
-
-  def ensure_mount_point
-    FileUtils.mkdir_p options[:mount]
-  end
-
-  def description verbose = false
-    opts = options
-    String.new.tap do |s|
-
-      s << Paint["## #{name}", :cyan, :bold]
-      s << "\nEncrypted Root: "
-      s << if File.directory?(opts[:root])
-        Paint["#{opts[:root]}", :green]
-      elsif File.exists?(opts[:root])
-        Paint["#{opts[:root]} (not a directory)", :red]
-      else
-        Paint["#{opts[:root]} (doesn't exist)", :red]
-      end
-
-      s << "\nMount Point: "
-      s << case mount_status
-      when :mounted
-        Paint["#{opts[:mount]}", :green]
-      when :invalid
-        Paint["#{opts[:mount]} (not a directory)", :red]
-      else
-        Paint["#{opts[:mount]} (not mounted)", :yellow]
-      end
-
-      s << "\nVolume Name: #{opts[:volume]}"
-      if opts[:password_file]
-        s << "\nPassword File: #{opts[:password_file]}"
-      elsif opts[:keychain]
-        s << "\nKeychain Password: #{opts[:keychain]}"
-      end
-      s << "\nEncFS Config: #{opts[:encfs_config]}" if opts[:encfs_config]
-
-      s << "\nCommand: #{Paint[encfs.command, :yellow]}" if verbose
-    end
-  end
-
-  def mount_status
-    if File.directory? options[:mount]
-      :mounted
-    elsif File.exists? options[:mount]
-      :invalid
-    else
-      :unmounted
-    end
-  end
-
-  def configure options = {}, &block
-    @options.merge! options
-    DSL.new(@options).instance_eval &block if block
-    self
-  end
-
-  def options
-    @options.tap do |opts|
-
-      opts[:root] = File.expand_path opts[:root] || "~/Dropbox/#{opts[:name]}"
-      opts[:mount] = File.expand_path opts[:mount] || "/Volumes/#{opts[:name]}"
-      opts[:encfs_config] = File.expand_path opts[:encfs_config] if opts[:encfs_config]
-      opts[:volume] ||= opts[:name]
-
-      if opts[:password_file]
-        opts[:password_file] = File.expand_path opts[:password_file]
-        opts.delete :keychain
-      elsif opts[:keychain] == true
-        opts[:keychain] = opts[:name]
-      end
-    end
-  end
-
-  class DSL
-
-    def initialize options
+    def initialize options = {}
+      raise OptionError.new("The :name option is required", :name) unless options[:name]
       @options = options
+      @validator = Validator.new raise_first: true
     end
 
-    OPTION_KEYS.each{ |name| define_method(name){ |value| @options[name] = value } }
+    def name
+      @options[:name]
+    end
+
+    def command
+      encfs.command
+    end
+
+    def mount
+      @validator.validate mount_options
+      ensure_mount_point
+      system command
+    end
+
+    def unmount
+      options = mount_options
+      result = system "#{options[:umount]} #{options[:mount]}"
+      sleep options[:umount_delay] if options[:umount_delay] and options[:umount_delay] > 0
+      result
+    end
+
+    def mounted?
+      File.directory? mount_options[:mount]
+    end
+
+    def mount_options
+      default_mount_options.merge(@options).tap do |options|
+        options[:keychain] = @options[:name] if options[:keychain] == true
+      end
+    end
+
+    def configure options = {}, &block
+      @options.merge! options
+      DSL.new(@options).instance_eval &block if block
+      self
+    end
+
+    private
+
+    def ensure_mount_point
+      FileUtils.mkdir_p mount_options[:mount]
+    end
+
+    def encfs
+      Boxafe::Encfs.new mount_options
+    end
+    
+    def default_mount_options
+      name = @options[:name]
+      {
+        # TODO: change default root and mount dirs depending on host os
+        root: "~/Dropbox/#{name}",
+        mount: "/Volumes/#{name}",
+        volume: name
+      }
+    end
+
+    class DSL
+
+      def initialize options
+        @options = options
+      end
+
+      OPTION_KEYS.each{ |name| define_method(name){ |value| @options[name] = value } }
+    end
   end
 end

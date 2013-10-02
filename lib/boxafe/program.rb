@@ -23,7 +23,7 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe status'
       c.description = 'Display the current status and configuration'
       c.action do |args,options|
-        to_trace_or_not_to_trace do
+        to_trace_or_not_to_trace options.trace do
           cli.status extract(options)
         end
       end
@@ -33,7 +33,7 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe mount'
       c.description = 'Mount configured boxes with EncFS'
       c.action do |args,options|
-        to_trace_or_not_to_trace do
+        to_trace_or_not_to_trace options.trace do
           cli.mount *args
         end
       end
@@ -43,7 +43,7 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe unmount'
       c.description = 'Unmount configured boxes'
       c.action do |args,options|
-        to_trace_or_not_to_trace do
+        to_trace_or_not_to_trace options.trace do
           cli.unmount *args
         end
       end
@@ -53,7 +53,7 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe start'
       c.description = 'Configure boxafe to run on startup'
       c.action do |args,options|
-        to_trace_or_not_to_trace do
+        to_trace_or_not_to_trace options.trace do
           cli.start *(args.push extract(options))
         end
       end
@@ -63,7 +63,7 @@ class Boxafe::Program < Commander::Runner
       c.syntax = 'boxafe stop'
       c.description = 'Stop boxafe from running on startup'
       c.action do |args,options|
-        to_trace_or_not_to_trace do
+        to_trace_or_not_to_trace options.trace do
           cli.stop *(args.push extract(options))
         end
       end
@@ -77,12 +77,12 @@ class Boxafe::Program < Commander::Runner
   end
 
   def to_trace_or_not_to_trace trace = false
-    begin
+    if trace
       yield
-    rescue Boxafe::Error => e
-      if trace
-        raise e
-      else
+    else
+      begin
+        yield
+      rescue Boxafe::Error => e
         warn Paint["#{e.message}#{BACKTRACE_NOTICE}", :red]
         exit e.code
       end

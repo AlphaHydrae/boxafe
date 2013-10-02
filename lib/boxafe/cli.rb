@@ -1,4 +1,6 @@
 # encoding: UTF-8
+require 'which_works'
+
 class Boxafe::CLI
 
   def start options = {}
@@ -16,11 +18,11 @@ class Boxafe::CLI
     config = load_config options
 
     puts
-    puts Paint["# Boxafe v#{Boxafe::VERSION}", :bold]
+    puts global_description(config, options[:verbose])
 
     config.boxes.each do |box|
       puts
-      puts box.description(options[:verbose])
+      puts box_description(box, options[:verbose])
     end
 
     puts
@@ -51,7 +53,6 @@ class Boxafe::CLI
         next
       end
 
-      box.ensure_mount_point
       box.mount
 
       puts case box.mount_status
@@ -92,6 +93,73 @@ class Boxafe::CLI
   end
 
   private
+
+  def global_description config, verbose = false
+
+    Array.new.tap do |a|
+
+      a << Paint["Boxafe v#{Boxafe::VERSION}", :bold]
+      # TODO: show notifications status
+
+      if verbose
+
+        encfs_bin, umount_bin = config.options[:encfs], config.options[:umount]
+        errors = Boxafe::Validator.new.validate_global_options config.options
+
+        a << "EncFS binary: #{option_value :encfs, encfs_bin, errors}"
+        a << "umount binary: #{option_value :umount, umount_bin, errors}"
+        # TODO: show umount delay if verbose
+      end
+    end.join "\n"
+  end
+
+  def box_description box, verbose = false
+
+    options = box.mount_options
+    errors = Boxafe::Validator.new.validate_mount_options options
+
+    root_str = option_value :root, options[:root], errors
+    mount_str = option_value :mount, options[:mount], errors, box.mounted? ? nil : "not mounted"
+
+    if options[:verbose]
+
+      Array.new.tap do |a|
+
+        a << Paint["## #{box.name}", :cyan, :bold]
+        a << "Encrypted Root: #{root_str}"
+        a << "Mount Point: #{mount_str}"
+        a << "Password File: #{option_value :password_file, options[:password_file], errors}" if options[:password_file]
+        a << "Keychain Password: #{option_value :keychain, options[:keychain], errors}" if options[:keychain]
+        a << "EncFS Config: #{option_value :encfs_config, options[:encfs_config], errors}" if options[:encfs_config]
+        a << "Command: #{Paint[box.command, :cyan]}" if verbose
+
+        errors.each do |e|
+          a << Paint[":#{e.option} option error - #{e.message}", :red]
+        end
+      end.join "\n"
+    else
+
+      String.new.tap do |s|
+
+        s << %|#{Paint["#{box.name}:", :bold, :cyan]} #{root_str} -> #{mount_str}|
+
+        errors.each do |e|
+          s << "\n" + " " * (box.name.length + 2)
+          s << Paint[":#{e.option} option error - #{e.message}", :red]
+        end
+      end
+    end
+  end
+
+  def option_value name, value, errors, warning = nil
+    if error = errors.find{ |e| e.option == name }
+      Paint[value, :red]
+    elsif warning
+      Paint["#{value} (#{warning})", :yellow]
+    else
+      Paint[value, :green]
+    end
+  end
 
   def load_config options = {}
     Boxafe::Config.new(options).load

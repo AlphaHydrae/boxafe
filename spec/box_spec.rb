@@ -7,6 +7,19 @@ describe Boxafe::Box do
 
   before :each do
     Kernel.stub system: nil
+    FileUtils.mkdir_p box_options[:root]
+
+    @old_path = ENV['PATH']
+    ENV['PATH'] = '/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin'
+    FileUtils.mkdir_p '/usr/local/bin'
+    %w(encfs umount).each do |bin|
+      FileUtils.touch "/usr/local/bin/#{bin}"
+      FileUtils.chmod 0755, "/usr/local/bin/#{bin}"
+    end
+  end
+
+  after :each do
+    ENV['PATH'] = @old_path
   end
 
   it "should raise an error when created if the name option is missing" do

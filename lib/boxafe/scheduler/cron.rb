@@ -18,7 +18,7 @@ class Boxafe::Scheduler::Cron < Boxafe::Scheduler
   def self.mount_schedule
     Proc.new do
       every 1.minute do
-        command 'echo $(date) > /Users/unknow/Projects/boxafe/bar.txt'
+        command 'echo $(date) > /tmp/bar.txt'
       end
     end
   end
