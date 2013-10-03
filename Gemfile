@@ -8,11 +8,8 @@ gem 'commander', '~> 4.1.2'
 gem 'which_works', '~> 1.0.0'
 gem 'dotenv', '~> 0.8.0'
 gem 'mutaconf', '~> 0.2.0'
-gem 'launchdr', '3'
 gem 'notifies', '~> 0.1.0'
-
-#gem 'whenever', '~> 0.8.2'
-#gem 'whenever', :git => 'git@github.com:AlphaHydrae/whenever.git', :branch => 'block-config'
+gem 'multi_scheduler', '~> 0.1.1'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

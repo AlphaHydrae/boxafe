@@ -1,4 +1,10 @@
 
+## next release
+
+* Extracted notifications into notifies gem
+* Extracted scheduling into multi\_scheduler gem
+* More thorough validations on supplied options
+
 ## 0.1.5 (alpha)
 
 * Option to read password from a file
