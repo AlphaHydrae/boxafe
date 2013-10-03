@@ -9,7 +9,7 @@ gem 'which_works', '~> 1.0.0'
 gem 'dotenv', '~> 0.8.0'
 gem 'mutaconf', '~> 0.2.0'
 gem 'notifies', '~> 0.1.0'
-gem 'multi_scheduler', '~> 0.1.1'
+gem 'multi_scheduler', '~> 0.1.2'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

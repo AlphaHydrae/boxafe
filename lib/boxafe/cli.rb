@@ -8,11 +8,11 @@ class Boxafe::CLI
   def start options = {}
     # TODO: allow to mount only specific boxes
     # TODO: only allow boxes with an extpass
-    MultiScheduler.schedule 'com.alphahydrae.boxafe', command: 'boxafe', args: %w(mount)
+    schedule(options).start
   end
 
   def stop options = {}
-    MultiScheduler.unschedule 'com.alphahydrae.boxafe'
+    schedule(options).stop
   end
 
   def status options = {}
@@ -93,6 +93,10 @@ class Boxafe::CLI
   end
 
   private
+
+  def schedule options = {}
+    MultiScheduler.schedule 'com.alphahydrae.boxafe', command: 'boxafe', args: %w(mount)
+  end
 
   def global_description config, verbose = false
 

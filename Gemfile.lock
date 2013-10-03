@@ -51,7 +51,7 @@ GEM
       systemu (~> 2.5.0)
     mime-types (1.25)
     multi_json (1.7.7)
-    multi_scheduler (0.1.1)
+    multi_scheduler (0.1.2)
       launchdr (= 3)
     multi_xml (0.5.4)
     multipart-post (1.2.0)
@@ -112,7 +112,7 @@ DEPENDENCIES
   gem-release
   gemcutter
   jeweler
-  multi_scheduler (~> 0.1.1)
+  multi_scheduler (~> 0.1.2)
   mutaconf (~> 0.2.0)
   notifies (~> 0.1.0)
   paint (~> 0.8.5)
