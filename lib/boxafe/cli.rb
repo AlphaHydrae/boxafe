@@ -1,4 +1,5 @@
 # encoding: UTF-8
+require 'notifies'
 require 'which_works'
 
 class Boxafe::CLI
@@ -36,32 +37,31 @@ class Boxafe::CLI
     # FIXME: crashes with unknown box names
     boxes = args.empty? ? config.boxes : args.collect{ |arg| config.boxes.find{ |box| box.name == arg } }
 
-    notifier = Boxafe::Notifier.notifier config.options
-
     puts
     boxes.each do |box|
 
       print "Mounting #{box.name}... "
-      case box.mount_status
-      when :mounted
-        notifier.notify "#{box.name} is already mounted" if notifier
+      if box.mounted?
+        notify :info, "#{box.name} is already mounted", config.options
         puts Paint['already mounted', :green]
-        next
-      when :invalid
-        notifier.notify "#{box.name} has an invalid mount point (not a directory)", type: :failure if notifier
-        puts Paint['invalid mount point (not a directory)', :red]
         next
       end
 
-      box.mount
+      begin
+        box.mount
+      rescue OptionError => e
+        msg = ":#{e.option} option error - #{e.message}"
+        notify :error, "#{box.name} #{msg}", config.options
+        puts Paint[msg, :red]
+        next
+      end
 
-      puts case box.mount_status
-      when :mounted
-        notifier.notify "#{box.name} is mounted", type: :success if notifier
-        Paint['mounted', :green]
+      if box.mounted?
+        notify :ok, "#{box.name} is mounted", config.options
+        puts Paint['mounted', :green]
       else
-        notifier.notify "#{box.name} could not be mounted", type: :failure if notifier
-        Paint['could not be mounted', :red]
+        notify :error, "#{box.name} could not be mounted", config.options
+        puts Paint['could not be mounted', :red]
       end
     end
 
@@ -81,11 +81,10 @@ class Boxafe::CLI
       print "Umounting #{box.name}... "
       box.unmount
 
-      puts case box.mount_status
-      when :unmounted
-        Paint['unmounted', :green]
+      if box.mounted?
+        puts Paint['could not be unmounted', :red]
       else
-        Paint['could not be unmounted', :red]
+        puts Paint['unmounted', :green]
       end
     end
 
@@ -163,5 +162,10 @@ class Boxafe::CLI
 
   def load_config options = {}
     Boxafe::Config.new(options).load
+  end
+
+  def notify type, msg, options = {}
+    return unless options[:notify]
+    Notifies.notify msg, type: type
   end
 end

@@ -9,8 +9,8 @@ gem 'which_works', '~> 1.0.0'
 gem 'dotenv', '~> 0.8.0'
 gem 'mutaconf', '~> 0.2.0'
 gem 'launchdr', '3'
-gem 'growl', '~> 1.0.3'
-gem 'terminal-notifier-guard', '~> 1.5.3'
+gem 'notifies', '~> 0.1.0'
+
 #gem 'whenever', '~> 0.8.2'
 #gem 'whenever', :git => 'git@github.com:AlphaHydrae/whenever.git', :branch => 'block-config'
 

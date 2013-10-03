@@ -56,6 +56,9 @@ GEM
     mutaconf (0.2.0)
       multi_json (~> 1.7)
     nokogiri (1.5.10)
+    notifies (0.1.0)
+      growl (~> 1.0.3)
+      terminal-notifier-guard (~> 1.5.3)
     oauth2 (0.9.2)
       faraday (~> 0.8)
       httpauth (~> 0.2)
@@ -106,14 +109,13 @@ DEPENDENCIES
   fakefs
   gem-release
   gemcutter
-  growl (~> 1.0.3)
   jeweler
   launchdr (= 3)
   mutaconf (~> 0.2.0)
+  notifies (~> 0.1.0)
   paint (~> 0.8.5)
   rake
   rake-version
   rspec
   simplecov
-  terminal-notifier-guard (~> 1.5.3)
   which_works (~> 1.0.0)
