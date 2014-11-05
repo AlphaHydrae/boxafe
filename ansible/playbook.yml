@@ -1,0 +1,25 @@
+---
+- hosts: all
+  vars:
+    home: /home/vagrant
+  tasks:
+    - name: install packages
+      yum: pkg={{ item }} state=latest
+      sudo: true
+      with_items:
+        - gcc
+        - ruby
+        - ruby-devel
+        - libxml2
+        - libxml2-devel
+        - libxslt
+        - libxslt-devel
+        - encfs
+    - name: configure ruby gems
+      template: src=templates/gemrc.j2 dest={{ home }}/.gemrc owner=vagrant group=vagrant mode=0644
+    - name: install bundler
+      gem: name=bundler state=latest
+    - name: bundle install
+      shell: bundle install chdir=/vagrant
+      environment:
+        PATH: "{{ home }}/bin:{{ ansible_env.PATH }}"
