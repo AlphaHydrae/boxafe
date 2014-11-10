@@ -4,9 +4,9 @@ source "http://rubygems.org"
 #   gem "activesupport", ">= 2.3.5"
 
 gem 'paint', '~> 0.8.5'
-gem 'commander', '~> 4.1.2'
+gem 'commander', '~> 4.2.1'
 gem 'which_works', '~> 1.0.0'
-gem 'dotenv', '~> 0.8.0'
+gem 'dotenv', '~> 1.0.2'
 gem 'mutaconf', '~> 0.2.0'
 gem 'notifies', '~> 0.1.0'
 gem 'multi_scheduler', '~> 0.1.2'
