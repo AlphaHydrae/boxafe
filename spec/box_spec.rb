@@ -6,7 +6,7 @@ describe Boxafe::Box do
   let(:box){ new_box box_options }
 
   before :each do
-    Kernel.stub system: nil
+    allow(Kernel).to receive(:system).and_return(nil)
     FileUtils.mkdir_p box_options[:root]
 
     @old_path = ENV['PATH']
@@ -36,7 +36,7 @@ describe Boxafe::Box do
   shared_examples_for "an encfs controller" do |action|
 
     before :each do
-      Boxafe::Encfs.stub new: double(command: 'fooo')
+      allow(Boxafe::Encfs).to receive(:new).and_return(double(command: 'fooo'))
     end
 
     it "should create an encfs manager" do
