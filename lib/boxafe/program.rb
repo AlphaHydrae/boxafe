@@ -68,6 +68,8 @@ class Boxafe::Program < Commander::Runner
         end
       end
     end
+
+    default_command :status
   end
 
   private
