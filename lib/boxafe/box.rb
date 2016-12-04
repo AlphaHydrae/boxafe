@@ -58,7 +58,7 @@ module Boxafe
     def encfs
       Boxafe::Encfs.new mount_options
     end
-    
+
     def default_mount_options
       name = @options[:name]
       {

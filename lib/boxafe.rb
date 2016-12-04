@@ -9,7 +9,7 @@ module Boxafe
   # TODO: add detailed error description for non-trace mode
   class Error < StandardError
     attr_reader :code
-    
+
     def initialize msg, code = 1
       super msg
       @code = code

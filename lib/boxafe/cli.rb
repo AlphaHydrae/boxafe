@@ -50,7 +50,7 @@ class Boxafe::CLI
 
       begin
         box.mount
-      rescue OptionError => e
+      rescue Boxafe::OptionError => e
         msg = ":#{e.option} option error - #{e.message}"
         notify :error, "#{box.name} #{msg}", config.options
         puts Paint[msg, :red]
