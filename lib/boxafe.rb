@@ -4,7 +4,7 @@ require 'dotenv'
 require 'mutaconf'
 
 module Boxafe
-  VERSION = '0.1.6'
+  VERSION = '0.1.7'
 
   # TODO: add detailed error description for non-trace mode
   class Error < StandardError
