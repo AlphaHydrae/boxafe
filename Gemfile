@@ -14,12 +14,9 @@ gem 'multi_scheduler', '~> 0.1.2'
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
+  gem 'rake', '~> 11.3'
   gem 'jeweler', '~> 2.0'
   gem 'rake-version', '~> 1.0'
-end
-
-group :test do
-  gem 'rake', '~> 11.3'
   gem 'fakefs', '~> 0.10.0', require: 'fakefs/safe'
   gem 'rspec', '~> 3.1'
   gem 'simplecov', '~> 0.12.0'

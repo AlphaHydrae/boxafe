@@ -10,6 +10,10 @@ It can also mount them on startup. [EncFS](http://www.arg0.net/encfs) must be in
 
 **Note: Currently supports OS X. Partial Linux support.**
 
+## Requirements
+
+* Ruby 2.2+
+
 ## Installation
 
     gem install boxafe
