@@ -3,7 +3,7 @@ require 'helper'
 describe Boxafe::Box do
   include FakeFS::SpecHelpers
   let(:box_options){ { name: 'Boxafe', encfs: 'encfs', root: '/encrypted', mount: '/clear', volume: 'Boxafe' } }
-  let(:box){ new_box box_options }
+  subject{ new_box box_options }
 
   before :each do
     allow(Kernel).to receive(:system).and_return(nil)
@@ -33,6 +33,23 @@ describe Boxafe::Box do
     end
   end
 
+  describe "#mounted?" do
+    it "should return false if the mount directory does not exist" do
+      expect(subject.mounted?).to be(false)
+    end
+
+    it "should return false if the mount directory exists but is empty" do
+      FileUtils.mkdir_p '/clear'
+      expect(subject.mounted?).to be(false)
+    end
+
+    it "should return true if the mount directory is not empty" do
+      FileUtils.mkdir_p '/clear'
+      File.open('/clear/foo', 'w'){ |f| f.write 'bar' }
+      expect(subject.mounted?).to be(true)
+    end
+  end
+
   shared_examples_for "an encfs controller" do |action|
 
     before :each do
@@ -50,7 +67,6 @@ describe Boxafe::Box do
   end
 
   describe "#mount" do
-    subject{ box }
     it_should_behave_like "an encfs controller", :mount
   end
 
