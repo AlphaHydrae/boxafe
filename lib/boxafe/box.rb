@@ -34,7 +34,8 @@ module Boxafe
     end
 
     def mounted?
-      File.directory? mount_options[:mount]
+      # TODO: check if it's possible to differentiate between an empty mounted directory and an unmounted directory
+      File.directory?(mount_options[:mount]) && !Dir.entries(mount_options[:mount]).reject{ |e| e.match(/^\.{1,2}$/) }.empty?
     end
 
     def mount_options
